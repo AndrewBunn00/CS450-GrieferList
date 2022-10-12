@@ -1,18 +1,147 @@
+import sys
+
 
 class AVLNode:
     def __init__(self, user, serverBannedOn, timeOfBan):
+        # user is key
         self.user = user
         self.serverBannedOn = serverBannedOn
         self.timeOfBan = timeOfBan
         self.left = None
         self.right = None
-        self.balance = 1
+        self.balance = 0
 
 
-# class AVLTree:
+class AVLTree:
+
+    def insert(self, root, user, serverBannedOn, timeOfBan):
+        # user is key
+        if(user < root.user):
+            if(root.left):
+                beforeBalance = root.left.balance
+                root.left = self.insert(root.left, user, serverBannedOn, timeOfBan)
+                afterBalance = root.left.balance
+
+                # left subtree changed height
+                if(beforeBalance == 0 and afterBalance != 0):
+                    root.balance -= 1
+                elif(beforeBalance != 0 and afterBalance == 0):
+                    root.balance += 1
+            else:
+                root.left = AVLNode(user, serverBannedOn, timeOfBan)
+                root.balance -= 1
+
+        if(root.balance < -1 and root.left.balance <= -1):
+            return self.rotRight(root)
+        if(root.balance < -1 and root.left.balance >= 1):
+            return self.rotLeftRight(root)
+
+        if(user >= root.user):
+            if(root.right):
+                beforeBalance = root.right.balance
+                root.right = self.insert(root.right, user, serverBannedOn, timeOfBan)
+                afterBalance = root.right.balance
+
+                # right subtree changed height
+                if (beforeBalance == 0 and afterBalance != 0):
+                    root.balance += 1
+                elif (beforeBalance != 0 and afterBalance == 0):
+                    root.balance -= 1
+
+            else:
+                root.right = AVLNode(user, serverBannedOn, timeOfBan)
+                root.balance += 1
+
+        if (root.balance > 1 and root.right.balance >= 1):
+            return self.rotLeft(root)
+        if (root.balance > 1 and root.right.balance <= -1):
+            return self.rotRightLeft(root)
+
+
+        return root
+
+
+    def rotLeft(self, root):
+        newRoot = root.right
+
+        root.right = root.right.left
+        newRoot.left = root
+        if(newRoot.balance == 0 and (root.left or root.right)):
+            newRoot.balance = -1
+            root.balance = 1
+        elif(newRoot.balance == 0):
+            newRoot.balance = -1
+            root.balance = 0
+        else:
+            newRoot.balance = 0
+            root.balance = 0
+
+        return newRoot
+
+
+    def rotRight(self, root):
+        newRoot = root.left
+
+        root.left = root.left.right
+        newRoot.right = root
+        if(newRoot.balance == 0 and (root.left or root.right)):
+            newRoot.balance = 1
+            root.balance = 1
+        elif(newRoot.balance == 0):
+            newRoot.balance = 1
+            root.balance = 0
+        else:
+            newRoot.balance = 0
+            root.balance = 0
+
+        return newRoot
+
+
+    def rotLeftRight(self, curNode):
+        curNode.left = self.rotLeft(curNode.left)
+        return self.rotRight(curNode)
+
+    def rotRightLeft(self, curNode):
+        curNode.right = self.rotRight(curNode.right)
+        return self.rotLeft(curNode)
+
+
 
 
 if __name__ == '__main__':
+    tree = AVLTree()
+    root = None
+
+    # for line in sys.stdin:
+    #     line = line.split()
+
+    # if(root == None):
+    #     root = AVLNode(10, 0, 0)
+
+    # Left Right case
+    # root = tree.insert(root, 20, 0, 0)
+    # root = tree.insert(root, 30, 0, 0)
+    # root = tree.insert(root, 5, 0, 0)
+    # root = tree.insert(root, 6, 0, 0)
+
+    # Right Left case
+    # root = tree.insert(root, 20, 0, 0)
+    # root = tree.insert(root, 30, 0, 0)
+    # root = tree.insert(root, 40, 0, 0)
+    # root = tree.insert(root, 35, 0, 0)
+
+    # Left Left case
+    # root = tree.insert(root, 20, 0, 0)
+    # root = tree.insert(root, 30, 0, 0)
+    # root = tree.insert(root, 5, 0, 0)
+    # root = tree.insert(root, 4, 0, 0)
+
+    # Right Right case
+    # root = tree.insert(root, 20, 0, 0)
+    # root = tree.insert(root, 30, 0, 0)
+    # root = tree.insert(root, 40, 0, 0)
+    # root = tree.insert(root, 50, 0, 0)
+
     # read input from file and insert into a tree ORG ON USER NAME
 
     # read names from stdin
