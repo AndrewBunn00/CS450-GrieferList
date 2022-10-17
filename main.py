@@ -1,4 +1,5 @@
 import math
+import sys
 
 
 class ScapeGoatNode:
@@ -68,6 +69,12 @@ class ScapeGoatTree:
             # scapeGoat = self.findScapeGoat()
             print("Left off here")
         # To find goat, go backward up list of parents until we find highest imbalanced parent
+            highestParent = None
+            for i, parent in enumerate(parentList[::-1]):
+                if(i > self.alphaHeight(parent)):
+                    highestParent = parent
+                    break
+
 
         # Do in-order traversal of tree starting at the highest imbalanced parent to get arr of sorted vals
 
@@ -82,11 +89,14 @@ class ScapeGoatTree:
 
 
 
-    def alphaHeight(self):
+    def alphaHeight(self, specifiedRoot=None):
         """
         :return: the alpha height of the tree
         """
-        return math.floor(math.log(self.size, 1/self.alpha))
+        if(specifiedRoot is None):
+            return math.floor(math.log(self.size, 1/self.alpha))
+        else:
+            return math.floor(math.log(self.sizeOfTree(specifiedRoot), 1/self.alpha))
 
 
     def isAlphaBalanced(self, node):
@@ -101,8 +111,8 @@ class ScapeGoatTree:
 
 
 class AVLTree:
-    # def __init__(self):
-    #     self.root = None
+    def __init__(self):
+        self.results = []
 
 
     def insert(self, root, user, serverBannedOn, timeOfBan):
@@ -197,6 +207,28 @@ class AVLTree:
         return self.rotLeft(curNode)
 
 
+    def getPlayer(self, root, wantedUser):
+        # walk the tree and add the found player to the results list
+        if(root == None):
+            return
+
+        if(root.user == wantedUser):
+            self.results.append(root)
+
+        self.getPlayer(root.left, wantedUser)
+        self.getPlayer(root.right, wantedUser)
+
+        # return resList
+
+    def isPlayerBanned(self, root, wantedUser):
+        self.getPlayer(root, wantedUser)
+        if(len(tree.results) == 0):
+            print(f"{wantedUser} is not currently banned from any servers")
+        else:
+            mostRecentTime = max(node.timeOfBan for node in self.results)
+            print(f"{wantedUser} was banned {len(tree.results)} times. "
+                  f"Most recently on {mostRecentTime}")
+            self.results = []
 
 
 if __name__ == '__main__':
@@ -206,11 +238,30 @@ if __name__ == '__main__':
 
 
     # AVL AND TEST CASES =========================================
-    # tree = AVLTree()
-    # root = None
+    tree = AVLTree()
+    root = None
 
-    # for line in sys.stdin:
-    #     line = line.split()
+    with open(sys.argv[2]) as file:
+        if sys.argv[1] == "avl":
+            for line in file.readlines():
+                line = line.split()
+                # print(f"The line is {line}")
+                if(root == None):
+                    # first thing read should be root
+                    root = AVLNode(line[0], line[1], line[2])
+                else:
+                    root = tree.insert(root, line[0], line[1], line[2])
+            print("Tree built ==============")
+
+            with open(sys.argv[3]) as inputFile:
+                for line in inputFile.readlines():
+                    line = line.split()
+                    resList = []
+                    tree.isPlayerBanned(root, line[0])
+
+            print("Done checking bans ======================")
+
+
 
     # if(root == None):
     #     root = AVLNode(10, 0, 0)
@@ -244,5 +295,5 @@ if __name__ == '__main__':
     # read input from file and insert into a tree ORG ON USER NAME
 
     # read names from stdin
-    print("Hi")
+    # print("Hi")
 
