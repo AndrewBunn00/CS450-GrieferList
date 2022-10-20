@@ -179,7 +179,7 @@ class AVLTree:
                 root.balance -= 1
 
         if (root.balance < -1 and root.left.balance <= -1):
-            return self.rotRight(root)
+            return self.rotRight(root, True)
         if (root.balance < -1 and root.left.balance >= 1):
             return self.rotLeftRight(root)
 
@@ -200,53 +200,122 @@ class AVLTree:
                 root.balance += 1
 
         if (root.balance > 1 and root.right.balance >= 1):
-            return self.rotLeft(root)
+            return self.rotLeft(root, True)
         if (root.balance > 1 and root.right.balance <= -1):
             return self.rotRightLeft(root)
 
         return root
 
-    def rotLeft(self, root):
+    def rotLeft(self, root, adjBalance):
+        if not root.right:
+            return root
+
         newRoot = root.right
 
         root.right = root.right.left
         newRoot.left = root
-        if (newRoot.balance == 0 and (root.left or root.right)):
-            newRoot.balance = -1
-            root.balance = 1
-        elif (newRoot.balance == 0):
-            newRoot.balance = -1
-            root.balance = 0
-        else:
+
+        if (adjBalance):
             newRoot.balance = 0
             root.balance = 0
 
+        # newRoot = root.right
+        #
+        # root.right = root.right.left
+        # newRoot.left = root
+        # if (newRoot.balance == 0 and (root.left or root.right)):
+        #     newRoot.balance = -1
+        #     root.balance = 1
+        # elif (newRoot.balance == 0):
+        #     newRoot.balance = -1
+        #     root.balance = 0
+        # else:
+        #     newRoot.balance = 0
+        #     root.balance = 0
+
         return newRoot
 
-    def rotRight(self, root):
+    def rotRight(self, root, adjBalance):
+        if not root.left:
+            return root
+
         newRoot = root.left
 
         root.left = root.left.right
         newRoot.right = root
-        if (newRoot.balance == 0 and (root.left or root.right)):
-            newRoot.balance = 1
-            root.balance = 1
-        elif (newRoot.balance == 0):
-            newRoot.balance = 1
-            root.balance = 0
-        else:
+
+        if(adjBalance):
             newRoot.balance = 0
             root.balance = 0
+            # if (newRoot.balance == 0 and (root.left or root.right)):
+            #     newRoot.balance = 1
+            #     root.balance = 1
+            # elif (newRoot.balance == 0):
+            #     newRoot.balance = 1
+            #     root.balance = 0
+            # else:
+            #     newRoot.balance = 0
+            #     root.balance = 0
+
+        # newRoot = root.left
+        #
+        # root.left = root.left.right
+        # newRoot.right = root
+        #
+        # if (newRoot.balance == 0 and (root.left or root.right)):
+        #     newRoot.balance = 1
+        #     root.balance = 1
+        # elif (newRoot.balance == 0):
+        #     newRoot.balance = 1
+        #     root.balance = 0
+        # else:
+        #     newRoot.balance = 0
+        #     root.balance = 0
 
         return newRoot
 
     def rotLeftRight(self, curNode):
-        curNode.left = self.rotLeft(curNode.left)
-        return self.rotRight(curNode)
+        # curNode.left = self.rotLeft(curNode.left)
+        # return self.rotRight(curNode, True)
+        curNode.left = self.rotLeft(curNode.left, False)
+        y = self.rotRight(curNode, False)
+        x = y.right
+        z = y.left
+
+        if (y.balance == 0):
+            x.balance = 0
+            z.balance = 0
+        else:
+            if (y.balance > 0):
+                x.balance = -1
+                z.balance = 0
+            else:
+                x.balance = 0
+                z.balance = 1
+            y.balance = 0
+        return y
+
 
     def rotRightLeft(self, curNode):
-        curNode.right = self.rotRight(curNode.right)
-        return self.rotLeft(curNode)
+        # curNode.right = self.rotRight(curNode.right, True)
+        # return self.rotLeft(curNode)
+        curNode.right = self.rotRight(curNode.right, False)
+        y = self.rotLeft(curNode, False)
+        x = y.left
+        z = y.right
+
+        if(y.balance == 0):
+            x.balance = 0
+            z.balance = 0
+        else:
+            if(y.balance > 0):
+                x.balance = -1
+                z.balance = 0
+            else:
+                x.balance = 0
+                z.balance = 1
+            y.balance = 0
+        return y
 
     def getPlayer(self, root, wantedUser):
         # walk the tree and add the found player to the results list
@@ -320,8 +389,3 @@ if __name__ == '__main__':
     time_taken_in_microseconds = (time.time_ns() - start_time) / 1000.0
     print("total time in microseconds: " + str(time_taken_in_microseconds))
     # ==================================================
-
-    # read input from file and insert into a tree ORG ON USER NAME
-
-    # read names from stdin
-    # print("Hi")
