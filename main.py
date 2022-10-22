@@ -100,12 +100,6 @@ class ScapeGoatTree:
             listOfNodesToRet = []
             self.binarySearch(inOrderNodes, 0, len(inOrderNodes) - 1, listOfNodesToRet)
 
-            # save bc weird vals otherwise
-            # highestParentSave = ScapeGoatNode(highestParent.user, highestParent.serverBannedOn, highestParent.timeOfBan)
-            # highestParentSave.parent = highestParent.parent
-            # highestParentSave.left = highestParentSave.left
-            # highestParentSave.right = highestParentSave.right
-
             if(highestParent.amIRoot):
                 previousRoot = self.root
                 self.root = listOfNodesToRet[0]
@@ -593,11 +587,11 @@ class AVLTree:
     def isPlayerBanned(self, wantedUser, playerRecords=None):
         self.getPlayer(tree.root, wantedUser)
         if (len(tree.results) == 0):
-            print(f"{wantedUser} is not currently banned from any servers")
+            print(f"{wantedUser} is not currently banned from any servers.")
         else:
             mostRecentTime = max(node.timeOfBan for node in self.results)
-            print(f"{wantedUser} was banned {len(tree.results)} times. "
-                  f"Most recently on {mostRecentTime}")
+            print(f"{wantedUser} was banned from {len(tree.results)} servers. "
+                  f"most recently on: {mostRecentTime}")
             self.results = []
 
 
@@ -622,10 +616,10 @@ def readFromStdIn(tree, playerRecords=None, root=None):
                 line = line.rstrip()
                 line = line.split()
                 if(playerRecords.get(line[0]) is None):
-                    print(f"{line[0]} is not currently banned from any servers")
+                    print(f"{line[0]} is not currently banned from any servers.")
                 else:
-                    print(f"{line[0]} was banned {playerRecords[line[0]][0]} times. "
-                          f"Most recently on {playerRecords[line[0]][1]}")
+                    print(f"{line[0]} was banned from {playerRecords[line[0]][0]} servers. "
+                          f"most recently on: {playerRecords[line[0]][1]}")
 
         # else:
         #     for line in sys.stdin:
@@ -708,18 +702,20 @@ if __name__ == '__main__':
 
 
         elif(sys.argv[1] == "scapegoat"):
-
-            tree = ScapeGoatTree(0.75)
+            # Give tree alpha val
+            tree = ScapeGoatTree(0.79)
             root = None
             playerRecords = dict()
 
-
+            # Build the tree
             for line in file.readlines():
                 line = line.split()
                 tree.insert(line[0], line[1], line[2])
 
+            # Get all the players in the map
             playerRecords = tree.fillOutRecords(tree.root, playerRecords)
 
+            # Read all the potentially banned players and find if they are or not (print out)
             readFromStdIn(tree, playerRecords)
 
 
