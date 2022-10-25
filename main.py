@@ -356,8 +356,7 @@ class AVLTree:
                 # left subtree changed height
                 if (beforeBalance == 0 and afterBalance != 0):
                     root.balance -= 1
-                # elif (beforeBalance != 0 and afterBalance == 0):
-                #     root.balance += 1
+
             else:
                 root.left = AVLNode(user, serverBannedOn, timeOfBan)
                 root.balance -= 1
@@ -376,8 +375,6 @@ class AVLTree:
                 # right subtree changed height
                 if (beforeBalance == 0 and afterBalance != 0):
                     root.balance += 1
-                # elif (beforeBalance != 0 and afterBalance == 0):
-                #     root.balance -= 1
 
             else:
                 root.right = AVLNode(user, serverBannedOn, timeOfBan)
@@ -461,140 +458,6 @@ class AVLTree:
                 z.balance = 1
             y.balance = 0
         return y
-
-    # ====================================================
-    # def insert(self, rt, user, serverBannedOn, timeOfBan):
-    #     insNode = AVLNode(user, serverBannedOn, timeOfBan)
-    #     # begin insert
-    #     if rt is None:
-    #         return insNode
-    #     elif(user < rt.user):
-    #         rt.left = self.insert(rt.left, user, serverBannedOn, timeOfBan)
-    #     elif(user >= rt.user):
-    #         rt.right = self.insert(rt.right, user, serverBannedOn, timeOfBan)
-    #
-    #     # Update height (Add 1 for root)
-    #     rt.balance = max(self.getHeight(rt.left), self.getHeight(rt.right)) + 1
-    #     balanceFactor = self.getBalance(rt)
-    #
-    #     if(balanceFactor > 1):
-    #         # Left left
-    #         if(self.getBalance(rt.left) == 1):
-    #             rt = self.rotLeft(rt)
-    #
-    #         # Left right
-    #         else:
-    #             rt.left = self.rotRight(rt.left)
-    #             rt = self.rotLeft(rt)
-    #
-    #     elif(balanceFactor < -1):
-    #         # Right right
-    #         if(self.getBalance(rt.right) == -1):
-    #             rt = self.rotRight(rt)
-    #
-    #         # Right Left
-    #         else:
-    #             rt.right = self.rotLeft(rt.right)
-    #             rt = self.rotRight(rt)
-    #
-    #     # else it is balanced
-    #     return rt
-
-
-    # def getBalance(self, root):
-    #     if not root:
-    #         return 0
-    #
-    #     return(self.getHeight(root.left) - self.getHeight(root.right))
-    #
-    #
-    # def getHeight(self, root):
-    #     if not root:
-    #         return -1
-    #     return root.balance
-    #
-    #
-    # def rotLeft(self, rt):
-    #     c = rt.left
-    #     rt.left = c.right
-    #     c.right = rt
-    #     rt.height = max(self.getHeight(rt.left), self.getHeight(rt.right)) + 1
-    #     c.height = max(self.getHeight(c.left), self.getHeight(c.right)) + 1
-    #     return c
-    #
-    #
-    # def rotRight(self, rt):
-    #     c = rt.right
-    #     rt.right = c.left
-    #     c.left = rt
-    #     rt.height = max(self.getHeight(rt.left), self.getHeight(rt.right)) + 1
-    #     c.height = max(self.getHeight(c.left), self.getHeight(c.right)) + 1
-    #     return c
-
-    # ====================================================
-    # def insert(self,  root, user, serverBannedOn, timeOfBan):
-    #     if root is None:
-    #         return AVLNode(user, serverBannedOn, timeOfBan)
-    #     elif(user < root.user):
-    #         root.left = self.insert(root.left, user, serverBannedOn, timeOfBan)
-    #     else:
-    #         root.right = self.insert(root.right, user, serverBannedOn, timeOfBan)
-    #
-    #     # Need to update the root balance (trying to keep height instead to use for balance factor)
-    #     root.balance = max(self.height(root.left), self.height(root.right)) + 1
-    #
-    #     # Now get the balance based on the heights of the subtrees
-    #     bal = self.balance(root)
-    #
-    #     # LL
-    #     if((bal > 1)):
-    #         if((user < root.left.user)):
-    #             return self.rotRight(root)
-    #         elif(user > root.left.user):
-    #             root.left = self.rotLeft(root.left)
-    #             return self.rotRight(root)
-    #
-    #     if((bal < -1)):
-    #         if(user > root.right.user):
-    #             return self.rotLeft(root)
-    #         elif(user < root.right.user):
-    #             root.right = self.rotRight(root.right)
-    #             return self.rotLeft(root)
-    #
-    #     # if(bal > 1 and user > root.left.user):
-    #     #     root.left = self.rotLeft(root.left)
-    #     #     return self.rotRight(root)
-    #
-    #     # if(bal < -1 and user < root.right.user):
-    #     #     root.right = self.rotRight(root.right)
-    #     #     return self.rotLeft(root)
-    #
-    #     return root
-    #
-    #
-    # def rotRight(self, root):
-    #     left = root.left
-    #     lRight = left.right
-    #
-    #     left.right = root
-    #     root.left = lRight
-    #
-    #     root.balance = max(self.height(root.left), self.height(root.right))
-    #     left.balance = max(self.height(left.left), self.height(left.right))
-    #
-    #     return left
-    #
-    # def rotLeft(self, root):
-    #     right = root.right
-    #     t = right.left
-    #
-    #     right.left = root
-    #     root.right = t
-    #
-    #     root.balance = max(self.height(root.left), self.height(root.right))
-    #     right.balance = max(self.height(right.left), self.height(right.right))
-    #
-    #     return right
 
     def height(self, root):
         if root is None:
@@ -775,7 +638,7 @@ if __name__ == '__main__':
 
         elif(sys.argv[1] == "scapegoat"):
             # Give tree alpha val
-            tree = ScapeGoatTree(0.79)
+            tree = ScapeGoatTree(0.72)
             root = None
             playerRecords = dict()
 
